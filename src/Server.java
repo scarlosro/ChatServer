@@ -52,11 +52,12 @@ public class Server {
 					
 					ObjectInputStream information = new ObjectInputStream(socketReceived.getInputStream());
 					pack = (PackageSent) information.readObject();
-					socketReceived.close(); 
 					
 					nameClient = pack.getNameClient();
 					ipAddress = pack.getIp();
 					message= pack.getMessage();
+					System.out.println("Message is " + message);
+					
 					
 					if(!message.equals(" online")) {
 					
@@ -69,19 +70,24 @@ public class Server {
 						
 						resentPack.close();
 						sentTo.close();
-						socketReceived.close();
-					
+						socketReceived.close();					
 					}else {
 						InetAddress localization = socketReceived.getInetAddress();
 						String ipDir = localization.getHostAddress();
 						ipList.add(ipDir);
-						pack.setIpList(ipList); 
+						pack.setIpList(ipList);  
 						for(String z: ipList) {
-							System.out.println(z);
+							Socket sentTo = new Socket(z, 9090);
+							ObjectOutputStream resentPack = new ObjectOutputStream(sentTo.getOutputStream());
+							
+							resentPack.writeObject(pack);
+							
+							resentPack.close();
+							sentTo.close();
+							socketReceived.close();		
 						}
 					}
-				}
-					
+				}	
 				}catch (IOException | ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

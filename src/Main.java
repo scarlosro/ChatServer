@@ -4,8 +4,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+
 import java.awt.event.*;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -18,6 +21,23 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class Main {
+	
+	static class ClientOnline extends WindowAdapter{
+		public void windowOpened(WindowEvent e) {
+			try {
+				Socket soc = new Socket("192.168.100.4",9999);
+				PackageSent info = new PackageSent();
+				info.setMessage(" online");
+				ObjectOutputStream package_data = new ObjectOutputStream(soc.getOutputStream());
+				package_data.writeObject(info);
+				soc.close();
+				
+				
+			}catch(Exception ew) {
+				
+			}
+		}
+	}
 	
 	
 	public  static class LayoutView extends JPanel implements Runnable{
@@ -32,6 +52,7 @@ public class Main {
 		private JComboBox ipAddress;
 		private JTextArea chatField;
 		private JLabel c_name;
+		private JScrollPane scroll;
 		String name_user;
 
 		public LayoutView() {
@@ -57,6 +78,9 @@ public class Main {
 			
 			chatField = new JTextArea(12,20);
 			add(chatField);
+			scroll = new JScrollPane(chatField);
+			scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+			add(scroll);
 			input1 = new JTextField(20);
 			add(input1);
 			sendButton = new JButton("Enviar");
@@ -72,17 +96,20 @@ public class Main {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				chatField.append("Tú: " + input1.getText() + "\n");
+
 				try {
-					Socket socket = new Socket("192.168.100.88",9999);
+					Socket socket = new Socket("192.168.100.4",9999);
 					
 					PackageSent information = new PackageSent();
 					information.setIp(ipAddress.getSelectedItem().toString());
 					information.setNameClient(nameClient.getText());
+					System.out.println("Message to send is " + input1.getText());
 					information.setMessage(input1.getText());
 					
 					ObjectOutputStream pack = new ObjectOutputStream(socket.getOutputStream());
 					pack.writeObject(information);
-					
+					input1.setText("");
 					socket.close(); 
 					
 					
@@ -116,14 +143,15 @@ public class Main {
 					packReceived= (PackageSent) receive.readObject();
 					
 					if(!packReceived.getMessage().equals(" online")) {
-						chatField.append(packReceived.getNameClient() + ": " + packReceived.getMessage());
+						chatField.append(packReceived.getNameClient() + ": " + packReceived.getMessage() + "\n");
 					}else {
 						ArrayList<String> ipsMenu = new ArrayList<String>();
-						for(String z:ipsMenu) {
+						ipsMenu=packReceived.getIpList();
+						ipAddress.removeAllItems();
+						for(String z: ipsMenu) {
+							
 							ipAddress.addItem(z);
-							System.out.println(z);
 						}
-						
 					}
 				}
 				
@@ -142,7 +170,7 @@ public class Main {
 			LayoutView layoutView = new LayoutView();
 			add(layoutView);
 			setVisible(true);
-			addWindowListener((WindowListener) new Online());
+			addWindowListener( new ClientOnline());
 		}
 	}
 

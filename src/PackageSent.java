@@ -4,8 +4,8 @@ import java.util.ArrayList;
 public class PackageSent implements Serializable{
 	
 	private String nameClient;
-	private String ip;
-	private String message;
+	private String ip; 
+	String message;
 	private ArrayList<String> ipList;
 	
 	public ArrayList<String> getIpList() {
