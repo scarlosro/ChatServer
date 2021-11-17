@@ -22,6 +22,8 @@ import java.util.ArrayList;
 
 public class Main {
 	
+	public static Thread thread;
+	
 	static class ClientOnline extends WindowAdapter{
 		public void windowOpened(WindowEvent e) {
 			try {
@@ -84,7 +86,7 @@ public class Main {
 			sendButton.addActionListener(event);
 			add(sendButton);
 			
-			Thread thread = new Thread(this);
+			thread = new Thread(this);
 			thread.start();
 		}
 		
@@ -167,6 +169,18 @@ public class Main {
 			add(layoutView);
 			setVisible(true);
 			addWindowListener( new ClientOnline());
+			addWindowListener(new WindowAdapter() {
+
+		        @SuppressWarnings("deprecation")
+				@Override
+		        public void windowClosing(WindowEvent e) {
+		            super.windowClosing(e); 
+		            thread.stop();
+		            
+		        }
+
+
+		    });
 		}
 		
 	}

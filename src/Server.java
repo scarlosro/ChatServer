@@ -33,7 +33,6 @@ public class Server {
 			thread = new Thread(this);
 			thread.start();
 		}
-		
 		@Override
 		public void run() {
 			try {
