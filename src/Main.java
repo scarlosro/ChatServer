@@ -70,10 +70,6 @@ public class Main {
 			add(label1);
 			
 			ipAddress = new JComboBox();
-			/*ipAddress.addItem("Usuario 1");
-			ipAddress.addItem("Usuario 2");
-			ipAddress.addItem("Usuario 3");*/
-
 			add(ipAddress);
 			
 			chatField = new JTextArea(12,20);
@@ -172,6 +168,7 @@ public class Main {
 			setVisible(true);
 			addWindowListener( new ClientOnline());
 		}
+		
 	}
 
 	public static void main(String []args) {

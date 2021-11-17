@@ -33,6 +33,7 @@ public class Server {
 			thread = new Thread(this);
 			thread.start();
 		}
+		
 		@Override
 		public void run() {
 			try {
@@ -56,7 +57,6 @@ public class Server {
 					nameClient = pack.getNameClient();
 					ipAddress = pack.getIp();
 					message= pack.getMessage();
-					System.out.println("Message is " + message);
 					
 					
 					if(!message.equals(" online")) {
