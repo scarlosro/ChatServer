@@ -27,7 +27,7 @@ public class Main {
 	static class ClientOnline extends WindowAdapter{
 		public void windowOpened(WindowEvent e) {
 			try {
-				Socket soc = new Socket("192.168.100.4",9999);
+				Socket soc = new Socket("192.168.0.8",9999);
 				PackageSent info = new PackageSent();
 				info.setMessage(" online");
 				ObjectOutputStream package_data = new ObjectOutputStream(soc.getOutputStream());
@@ -97,7 +97,7 @@ public class Main {
 				chatField.append("Tú: " + input1.getText() + "\n");
 
 				try {
-					Socket socket = new Socket("192.168.100.4",9999);
+					Socket socket = new Socket("192.168.0.8",9999);
 					
 					PackageSent information = new PackageSent();
 					information.setIp(ipAddress.getSelectedItem().toString());
